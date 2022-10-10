@@ -7,7 +7,6 @@ import urllib.request as ur
 
 
 def model_init(model):
-
     ie_core = Core()
     model = ie_core.read_model(model=model)
     compiled_model = ie_core.compile_model(model=model, device_name="CPU")
@@ -16,9 +15,7 @@ def model_init(model):
     return input_keys, output_keys, compiled_model
 
 
-#with open("Live.jpg", "rb") as imageFile:
-    #str = base64.b64encode(imageFile.read())
-    #print(str)
+
 with open("Live.txt", 'r') as f:
     str= f.read()
 
@@ -73,9 +70,9 @@ def detect_emotion(image_encoded):
             boxes = compiled_model([face])[outputs]
             for i in range(5):
                 format = "{:.2f}".format(boxes[0][i]*100)
-                print(class_labels[i], "=", format, "%")
                 with open("results.txt", 'a') as outfile:
                     outfile.write(class_labels[i]+"="+format+"%" +'\n') 
+                    
             pred = np.argmax(boxes)
             label = class_labels[pred]
             return(label)
