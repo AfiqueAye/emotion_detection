@@ -1,0 +1,20 @@
+name: CML
+on: [push]
+jobs:
+  run:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: iterative/setup-cml@v1
+      - name: Test model
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pip install -r requirements.txt
+          python emotion_API.py
+          
+          cat results.txt >> report.md
+          cml comment create --publish report.md
+          cml send-github-check report.md
